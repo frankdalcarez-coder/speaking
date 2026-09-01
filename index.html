@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17130F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Take Two">
+<title>Take Two — speaking drills</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%2317130F'/%3E%3Ccircle cx='90' cy='90' r='34' fill='%23F2432C'/%3E%3Ccircle cx='90' cy='90' r='54' fill='none' stroke='%23F2432C' stroke-opacity='.35' stroke-width='6'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2317130F'/%3E%3Ccircle cx='32' cy='32' r='13' fill='%23F2432C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#17130F;
+  --panel:#211C18;
+  --panel-2:#2B2521;
+  --line:#3A322C;
+  --ink:#F0E9E1;
+  --ink-2:#A79B90;
+  --ink-3:#6F645C;
+  --live:#F2432C;
+  --warm:#E9A227;
+  --good:#7FA88B;
+  --r:14px;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Oswald","Arial Narrow",sans-serif;font-weight:600;letter-spacing:.01em}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--warm);outline-offset:3px;border-radius:6px}
+
+#app{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+.view{flex:1;padding:18px 18px calc(96px + var(--safe-b));display:none;animation:in .18s ease-out}
+.view.on{display:block}
+@keyframes in{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- tally strip ---- */
+.tally{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.tally i{display:block;height:100%;width:0%;background:var(--live);transition:width .25s linear}
+
+/* ---- home ---- */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;padding:6px 0 20px}
+.masthead h1{font-size:30px;margin:0;line-height:1}
+.masthead .sub{color:var(--ink-3);font-size:13px}
+
+.status{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.status .row{display:flex;gap:14px;align-items:flex-end}
+.big{font-family:"Barlow Condensed",sans-serif;font-size:64px;line-height:.85;font-weight:700}
+.big small{font-size:15px;font-weight:500;color:var(--ink-2);margin-left:6px;font-family:"IBM Plex Sans",sans-serif}
+.streak{margin-left:auto;text-align:right;color:var(--ink-2);font-size:13px}
+.streak b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:30px;color:var(--warm);line-height:1;font-weight:700}
+
+.plan{margin-top:22px}
+.plan h2{font-size:19px;margin:0 0 10px}
+.step{display:flex;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.step .n{font-family:"Barlow Condensed",sans-serif;font-size:22px;color:var(--ink-3);width:18px;flex:none;font-weight:600}
+.step .t{flex:1;min-width:0}
+.step .t b{display:block;font-weight:600;font-size:16px}
+.step .t span{color:var(--ink-2);font-size:13.5px}
+.step .m{color:var(--ink-3);font-size:13px;flex:none}
+.step.done .t b{color:var(--good)}
+
+.cta{display:block;width:100%;margin-top:22px;background:var(--live);color:#fff;font-weight:600;
+  padding:17px;border-radius:var(--r);font-size:17px;text-align:center}
+.cta:active{transform:translateY(1px)}
+.cta.quiet{background:var(--panel-2);color:var(--ink);border:1px solid var(--line)}
+.ghost{display:block;width:100%;margin-top:10px;padding:14px;border-radius:var(--r);
+  border:1px solid var(--line);color:var(--ink-2);text-align:center;font-size:15px}
+
+.tip{margin-top:20px;padding:14px 16px;border-left:2px solid var(--warm);background:var(--panel);
+  border-radius:0 var(--r) var(--r) 0;color:var(--ink-2);font-size:14px}
+.tip b{color:var(--ink);font-weight:600}
+
+/* ---- runner ---- */
+.runner{position:fixed;inset:0;background:var(--ground);z-index:60;display:none;flex-direction:column}
+.runner.on{display:flex}
+.rtop{padding:calc(12px + env(safe-area-inset-top,0px)) 18px 10px;max-width:520px;margin:0 auto;width:100%}
+.rbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.rbar .x{font-size:26px;color:var(--ink-3);line-height:1;padding:4px 8px;margin-left:-8px}
+.rbar .lbl{flex:1;min-width:0;font-size:13.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rbar .cnt{font-size:13px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+.rbody{flex:1;overflow-y:auto;padding:8px 18px 18px;max-width:520px;margin:0 auto;width:100%}
+.prompt{font-family:"Barlow Condensed",sans-serif;font-size:32px;line-height:1.12;margin:14px 0 6px;font-weight:600}
+.brief{color:var(--ink-2);font-size:15px;margin:0 0 18px}
+
+.clock{font-family:"Barlow Condensed",sans-serif;font-size:104px;line-height:.8;font-weight:700;
+  font-variant-numeric:tabular-nums;text-align:center;margin:6px 0 4px;transition:color .2s}
+.clock.hot{color:var(--live)}
+.clock.rest{color:var(--good)}
+.state{text-align:center;color:var(--ink-3);font-size:13.5px;letter-spacing:.14em;margin-bottom:18px;min-height:20px}
+.state.live{color:var(--live)}
+
+.beats{margin:0 0 4px;padding:0;list-style:none}
+.beat{display:flex;gap:12px;padding:11px 13px;border-radius:10px;border:1px solid transparent;color:var(--ink-3);align-items:baseline}
+.beat b{font-weight:600;min-width:74px;flex:none;font-size:15px}
+.beat span{font-size:14px}
+.beat.now{background:var(--panel);border-color:var(--live);color:var(--ink)}
+.beat.past{color:var(--ink-3)}
+.beat.past b{color:var(--good)}
+
+.tapzone{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:30px 18px;text-align:center;margin-top:6px}
+.tapzone:active{background:var(--panel-2);border-color:var(--live)}
+.tapzone .k{font-family:"Barlow Condensed",sans-serif;font-size:62px;line-height:.9;font-weight:700}
+.tapzone .h{color:var(--ink-2);font-size:14px;margin-top:6px}
+
+.script{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;
+  font-size:16.5px;line-height:1.65;color:var(--ink)}
+.reading{color:var(--ink-2);font-size:14px;margin-top:12px;text-align:center}
+.reading b{color:var(--ink);font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:700}
+
+.rfoot{padding:12px 18px calc(16px + var(--safe-b));max-width:520px;margin:0 auto;width:100%;
+  border-top:1px solid var(--line);background:var(--ground)}
+.rfoot .cta{margin-top:0}
+.pair{display:flex;gap:10px}
+.pair>*{flex:1;margin-top:0}
+
+/* ---- library / log ---- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;margin-bottom:10px;width:100%;text-align:left;display:block}
+.card b{display:block;font-size:16.5px;font-weight:600;margin-bottom:3px}
+.card p{margin:0;color:var(--ink-2);font-size:14px}
+.card .meta{margin-top:8px;color:var(--ink-3);font-size:12.5px}
+
+.scale{display:flex;gap:8px;margin:8px 0 20px}
+.scale button{flex:1;padding:14px 0;border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:600;color:var(--ink-2)}
+.scale button.sel{background:var(--live);border-color:var(--live);color:#fff}
+.qlab{font-size:15px;margin-top:14px}
+.qlab i{display:block;font-style:normal;color:var(--ink-3);font-size:13px}
+textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--ink);
+  padding:12px;font:inherit;font-size:15px;min-height:80px;resize:vertical}
+
+.bars{display:flex;align-items:flex-end;gap:5px;height:66px;margin:6px 0 18px}
+.bars i{flex:1;background:var(--panel-2);border-radius:3px 3px 0 0;min-height:3px}
+.entry{border-top:1px solid var(--line);padding:13px 0}
+.entry .d{color:var(--ink-3);font-size:12.5px}
+.entry .s{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:600;float:right}
+.entry .w{color:var(--ink-2);font-size:14px;margin-top:3px}
+.empty{color:var(--ink-3);font-size:15px;padding:26px 0;text-align:center}
+
+/* ---- nav ---- */
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(23,19,15,.94);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);padding:8px 0 calc(8px + var(--safe-b));z-index:40}
+nav div{max-width:520px;margin:0 auto;display:flex}
+nav button{flex:1;padding:8px 0;color:var(--ink-3);font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:5px}
+nav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--ink)}
+nav button.on svg{stroke:var(--live)}
+
+.hd{display:flex;align-items:baseline;justify-content:space-between;margin:4px 0 16px}
+.hd h2{font-size:26px;margin:0}
+.hd span{color:var(--ink-3);font-size:13px}
+.back{color:var(--ink-2);font-size:15px;padding:6px 0;margin-bottom:8px;display:block}
+.list-hd{color:var(--ink-3);font-size:13px;margin:20px 0 8px}
+ul.rules{margin:0 0 18px;padding-left:20px;color:var(--ink-2);font-size:15px}
+ul.rules li{margin-bottom:7px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + var(--safe-b));background:var(--panel-2);
+  border:1px solid var(--line);color:var(--ink);padding:11px 18px;border-radius:24px;font-size:14px;z-index:70;
+  opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ TRAIN ============ -->
+  <section class="view on" id="v-train">
+    <div class="masthead">
+      <h1>Take Two</h1>
+      <span class="sub" id="todayLabel"></span>
+    </div>
+
+    <div class="status">
+      <div class="row">
+        <div>
+          <div class="big" id="dayNum">1<small>of 21</small></div>
+          <div style="color:var(--ink-2);font-size:14px;margin-top:8px" id="dayTheme"></div>
+        </div>
+        <div class="streak"><b id="streakNum">0</b>day streak</div>
+      </div>
+    </div>
+
+    <div class="plan">
+      <h2 id="planTitle">Today's session</h2>
+      <div id="planList"></div>
+    </div>
+
+    <button class="cta" id="startBtn">Start session</button>
+    <button class="ghost" id="repeatBtn" style="display:none">Run it again</button>
+
+    <div class="tip">
+      <b>Record yourself.</b> Prop your phone up, hit record on the camera or a voice memo, then run the session. The drills build the habit — watching the take back is what changes it.
+    </div>
+  </section>
+
+  <!-- ============ DRILLS ============ -->
+  <section class="view" id="v-drills">
+    <div class="hd"><h2>Drills</h2><span>practise any one</span></div>
+    <div id="drillList"></div>
+  </section>
+
+  <!-- ============ DRILL DETAIL ============ -->
+  <section class="view" id="v-detail">
+    <button class="back" id="detailBack">← Drills</button>
+    <div class="hd"><h2 id="dTitle"></h2></div>
+    <p style="color:var(--ink-2);margin-top:-8px" id="dGoal"></p>
+    <div class="list-hd">How it runs</div>
+    <ul class="rules" id="dRules"></ul>
+    <button class="cta" id="dStart">Run this drill</button>
+  </section>
+
+  <!-- ============ REVIEW ============ -->
+  <section class="view" id="v-review">
+    <div class="hd"><h2>Rate the take</h2><span>10 seconds</span></div>
+    <p style="color:var(--ink-2);margin-top:-8px">Honest numbers make the log useful. 1 is rough, 5 is clean.</p>
+    <div id="reviewQs"></div>
+    <div class="qlab">Anything you noticed<i>One line. What tripped you up, or what worked.</i></div>
+    <textarea id="reviewNote" placeholder="Lost the thread on the second drill…"></textarea>
+    <button class="cta" id="saveReview">Save and finish</button>
+  </section>
+
+  <!-- ============ LOG ============ -->
+  <section class="view" id="v-log">
+    <div class="hd"><h2>Log</h2><span id="logCount"></span></div>
+    <div class="bars" id="bars"></div>
+    <div id="logList"></div>
+    <div class="list-hd" style="margin-top:30px">Settings</div>
+    <button class="card" id="soundToggle"><b>Beep between beats</b><p id="soundState">On</p></button>
+    <button class="card" id="resetBtn"><b>Reset all progress</b><p>Clears streak, day count and log.</p></button>
+  </section>
+
+  <nav>
+    <div>
+      <button class="on" data-go="train">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="9"/></svg>Train</button>
+      <button data-go="drills">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Drills</button>
+      <button data-go="log">
+        <svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Log</button>
+    </div>
+  </nav>
+</div>
+
+<!-- ============ RUNNER OVERLAY ============ -->
+<div class="runner" id="runner">
+  <div class="rtop">
+    <div class="rbar">
+      <button class="x" id="quitRun" aria-label="Quit drill">×</button>
+      <div class="lbl" id="runName"></div>
+      <div class="cnt" id="runCount"></div>
+    </div>
+    <div class="tally"><i id="tallyFill"></i></div>
+  </div>
+  <div class="rbody" id="runBody"></div>
+  <div class="rfoot" id="runFoot"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== storage ===================== */
+const KEY = 'take-two-state';
+const mem = {};
+const store = {
+  async get(k){
+    if (window.storage) { try { const r = await window.storage.get(k); return r ? r.value : null; } catch(e){} }
+    try { const v = localStorage.getItem(k); if (v !== null) return v; } catch(e){}
+    return k in mem ? mem[k] : null;
+  },
+  async set(k,v){
+    mem[k]=v;
+    if (window.storage) { try { await window.storage.set(k,v); return; } catch(e){} }
+    try { localStorage.setItem(k,v); } catch(e){}
+  }
+};
+
+let S = { day:1, streak:0, lastDone:null, history:[], sound:true };
+
+async function load(){
+  const raw = await store.get(KEY);
+  if (raw) { try { S = Object.assign(S, JSON.parse(raw)); } catch(e){} }
+  rollStreak();
+}
+async function save(){ await store.set(KEY, JSON.stringify(S)); }
+
+const dayKey = d => new Date(d).toISOString().slice(0,10);
+const today = () => dayKey(Date.now());
+function rollStreak(){
+  if (!S.lastDone) { S.streak = 0; return; }
+  const diff = Math.round((new Date(today()) - new Date(S.lastDone)) / 86400000);
+  if (diff > 1) S.streak = 0;
+}
+const doneToday = () => S.lastDone === today();
+
+/* ===================== prompt banks ===================== */
+const P = {
+  opinion:[
+    "Is working alone better than working in a team?",
+    "Should everyone learn to edit video?",
+    "What's the most overrated piece of advice you hear?",
+    "Is being early worth more than being good?",
+    "Do people trust a polished video more or a rough one?",
+    "What's a rule you used to follow and dropped?",
+    "Is cheap always expensive in the end?",
+    "What makes someone worth listening to?",
+    "Should you ever work for free?",
+    "Is speed or consistency more useful in a small business?"
+  ],
+  explain:[
+    "how compound interest works",
+    "why bread rises",
+    "what a hook is, to someone who's never made a video",
+    "how to choose between two suppliers",
+    "why some rooms echo and others don't",
+    "how you decide what to charge",
+    "what a good thumbnail does",
+    "how to fix a slow phone",
+    "why edits feel faster than real life",
+    "how you plan a week of work"
+  ],
+  creator:[
+    "why a client should hire you instead of a bigger agency",
+    "what you'd fix first on a channel with no views",
+    "the last mistake you made on a shoot and what it cost",
+    "how you decide a video is finished",
+    "what a first-time customer gets wrong about your work",
+    "why your price is what it is",
+    "what you'd do with one week and no budget",
+    "the part of your job nobody sees",
+    "how you handle a client who changes their mind late",
+    "what you'd tell yourself two years ago"
+  ],
+  hard:[
+    "Why did that project fail?",
+    "What's your biggest weakness on camera?",
+    "Why should we pay more than the last quote we got?",
+    "What would you do if the client hated it?",
+    "Can you do it faster?",
+    "What don't you know about this yet?",
+    "Why haven't you grown faster?",
+    "What's the risk here?"
+  ],
+  cats:[
+    "things in a kitchen","tools in a toolbox","reasons a video flops",
+    "things you can rent","words for 'quickly'","things that make a room feel expensive",
+    "objections a customer raises","things in a bag","words for 'good' that aren't 'good'",
+    "parts of a phone","types of weather","things that go wrong on a shoot"
+  ]
+};
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+const SCRIPT = "Most people think they have a speaking problem. Usually they have a deciding problem. The words arrive slowly because the point has not been chosen yet, so the mouth starts moving while the head is still shopping. Watch anyone who is easy to listen to and you will notice they commit early. They say the thing, then they explain the thing, then they stop. The pauses are not gaps. The pauses are where the next sentence gets built, in front of everyone, on purpose, without apology or filler.";
+const SCRIPT_WORDS = SCRIPT.trim().split(/\s+/).length;
+
+/* ===================== drills ===================== */
+const DRILLS = [
+  {
+    id:'point', name:'Point first', tag:'Structure', mins:3,
+    goal:"Kill the wind-up. Your conclusion becomes the first thing out of your mouth, not the last.",
+    rules:["A question appears. You get four beats.",
+           "Beat one: the answer, ten words or fewer. No preamble.",
+           "Then one reason, then one concrete example, then stop talking.",
+           "If you catch yourself saying 'so basically' at the start, you've already lost the rep."],
+    kind:'beats', reps:3, prompt:()=>pick(P.opinion),
+    beats:[{l:'Your answer',s:10,h:'Ten words or fewer. Say it flat.'},
+           {l:'Because',s:15,h:'One reason. Not three.'},
+           {l:'For example',s:20,h:'A real thing that happened.'},
+           {l:'Land it',s:8,h:'Repeat the answer. Stop.'}]
+  },
+  {
+    id:'prep', name:'Full frame', tag:'Structure', mins:4,
+    goal:"A container for longer answers so you can't wander. Point, reason, example, point.",
+    rules:["Same four beats, but you get more room in each.",
+           "The screen tells you which beat you're in. Move when it moves.",
+           "Silence inside a beat is fine. Drifting into the next one isn't."],
+    kind:'beats', reps:2, prompt:()=>"Explain "+pick(P.explain),
+    beats:[{l:'Point',s:15,h:'What this is, in one sentence.'},
+           {l:'Reason',s:25,h:'Why it works that way.'},
+           {l:'Example',s:30,h:'Show it. Specifics, names, numbers.'},
+           {l:'Point',s:15,h:'Say the first sentence again, shorter.'}]
+  },
+  {
+    id:'cold', name:'Cold open', tag:'Camera', mins:3,
+    goal:"Kills the frozen first take. You practise only the opening — three different ways.",
+    rules:["One topic, three rounds, twenty seconds each.",
+           "Say the first two sentences of a video about it. Then stop, even if you're rolling.",
+           "Each round the angle changes: a claim, a question, a scene.",
+           "No 'hey guys'. Start on the content."],
+    kind:'rounds', reps:3, sec:20, prompt:()=>"A video about "+pick(P.creator),
+    angles:["Open with a claim. Something you'd defend.",
+            "Open with a question the viewer is already asking.",
+            "Open mid-scene. Put us somewhere before you explain anything."]
+  },
+  {
+    id:'filler', name:'Filler hunt', tag:'Fluency', mins:3,
+    goal:"You can't remove a habit you can't hear. Ninety seconds of talking, and you tap yourself every time.",
+    rules:["Speak for ninety seconds on the prompt.",
+           "Every um, uh, like, so, basically, you know — tap the pad. Don't stop talking.",
+           "The fix isn't a better word. The fix is closing your mouth and letting the pause sit.",
+           "Under 4 per minute is fine. Under 2 is broadcast."],
+    kind:'tap', sec:90, unit:'fillers', prompt:()=>"Talk about "+pick(P.creator),
+    tapLabel:'Tap on every filler'
+  },
+  {
+    id:'breath', name:'One breath', tag:'Fluency', mins:3,
+    goal:"Cuts run-on sentences. One idea per breath, ending in a full stop instead of 'and then'.",
+    rules:["Six rounds, twelve seconds each.",
+           "One complete idea, one breath, then a real full stop.",
+           "If you end on 'and' or 'but', that rep didn't count.",
+           "Breathe in the gap. Don't rush the next one."],
+    kind:'rounds', reps:6, sec:12, prompt:()=>"Explain "+pick(P.explain),
+    angles:["One idea. One breath. Full stop.",
+            "Again — different sentence, same idea.",
+            "Shorter this time.",
+            "Now start with the most important word.",
+            "Now say it like you're annoyed you have to explain it.",
+            "Last one. Cleanest version you've got."]
+  },
+  {
+    id:'sprint', name:'Word sprint', tag:'Recall', mins:2,
+    goal:"Word-finding is a speed problem. Thirty seconds of forced retrieval trains the reach.",
+    rules:["A category appears. Name things out loud, tapping once per word.",
+           "Say them aloud — thinking them doesn't train anything.",
+           "Repeats don't count. Keep going through the blank patch.",
+           "Fifteen in thirty seconds is a good day."],
+    kind:'tap', sec:30, unit:'words', prompt:()=>"Name: "+pick(P.cats),
+    tapLabel:'Tap once per word'
+  },
+  {
+    id:'three', name:'Say it three ways', tag:'Flexibility', mins:3,
+    goal:"One idea, three audiences. Builds the ability to reach for a different version mid-sentence.",
+    rules:["Same idea, three rounds, thirty seconds each.",
+           "Round one: to a ten-year-old. Round two: to a paying client.",
+           "Round three: in seven words, no more.",
+           "The third one is the point. The first two are the run-up."],
+    kind:'rounds', reps:3, sec:30, prompt:()=>"Explain "+pick(P.explain),
+    angles:["To a ten-year-old. No jargon at all.",
+            "To a client who's paying. Confident, specific.",
+            "In seven words. Count them on your fingers."]
+  },
+  {
+    id:'bridge', name:'Bridge, don’t stall', tag:'Pressure', mins:3,
+    goal:"Replaces the panic 'um' with a phrase that buys you two seconds and sounds deliberate.",
+    rules:["A hard question lands. You answer in twenty-five seconds.",
+           "Open with one of the bridges on screen — out loud, unhurried.",
+           "Those two seconds are for choosing your point, not for filling air.",
+           "Then answer straight. No hedging after the bridge."],
+    kind:'rounds', reps:3, sec:25, prompt:()=>pick(P.hard),
+    angles:["Bridge: “The short answer is…”",
+            "Bridge: “Let me give you the honest version.”",
+            "Bridge: “Two things matter here. First…”"]
+  },
+  {
+    id:'pace', name:'Pace check', tag:'Camera', mins:3,
+    goal:"Most rushing is nerves, not habit. This gives you a number instead of a feeling.",
+    rules:["Read the passage aloud at the speed you'd use on camera.",
+           "Start the clock, read, stop the clock. Don't hurry to beat it.",
+           "130 to 160 words a minute is the comfortable band for talking head.",
+           "Too fast is the usual result. Read it again slower and feel the difference."],
+    kind:'read'
+  },
+  {
+    id:'close', name:'Land the ending', tag:'Camera', mins:2,
+    goal:"Openings get all the practice; endings trail off. This trains a clean stop.",
+    rules:["Three rounds, twenty-five seconds.",
+           "One line that recaps, one line that tells them exactly what to do, then silence.",
+           "Do not add 'yeah, so' after the last word. That's the whole drill.",
+           "Sit in the silence for a beat before you reach for the phone."],
+    kind:'rounds', reps:3, sec:25, prompt:()=>"Close a video about "+pick(P.creator),
+    angles:["Recap, then one instruction. Stop dead.",
+            "Same ending, but warmer.",
+            "Same ending in half the words."]
+  }
+];
+const byId = id => DRILLS.find(d=>d.id===id);
+
+/* 21-day programme: structure early, pressure later */
+const PLAN = [
+  {t:'Getting to the point',  d:['point','filler','sprint']},
+  {t:'Structure under a clock', d:['prep','breath','sprint']},
+  {t:'Openings',              d:['cold','point','filler']},
+  {t:'Trimming sentences',    d:['breath','three','sprint']},
+  {t:'Pace and pressure',     d:['pace','bridge','point']},
+  {t:'Camera day',            d:['cold','close','filler']},
+  {t:'Everything, lightly',   d:['point','three','breath']},
+  {t:'Frame work',            d:['prep','filler','close']},
+  {t:'Recall speed',          d:['sprint','three','point']},
+  {t:'Hard questions',        d:['bridge','breath','cold']},
+  {t:'Cutting the run-ons',   d:['breath','prep','sprint']},
+  {t:'Openings, again',       d:['cold','point','close']},
+  {t:'Slow it down',          d:['pace','three','filler']},
+  {t:'Pressure set',          d:['bridge','point','breath']},
+  {t:'Long form',             d:['prep','close','sprint']},
+  {t:'Fluency block',         d:['filler','breath','three']},
+  {t:'Full camera run',       d:['cold','prep','close']},
+  {t:'Under fire',            d:['bridge','filler','point']},
+  {t:'Range',                 d:['three','sprint','breath']},
+  {t:'Pace and land',         d:['pace','close','cold']},
+  {t:'Everything you have',   d:['point','bridge','prep']}
+];
+const planFor = n => PLAN[(n-1) % PLAN.length];
+
+/* ===================== sound ===================== */
+let actx=null;
+function blip(hi){
+  if (!S.sound) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = hi ? 880 : 560; o.type='sine';
+    g.gain.setValueAtTime(.0001, actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.16, actx.currentTime+.01);
+    g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime+.22);
+    o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+.24);
+  }catch(e){}
+  if (navigator.vibrate) { try{ navigator.vibrate(hi?[40,40,40]:25); }catch(e){} }
+}
+
+/* ===================== ui helpers ===================== */
+const $ = s => document.querySelector(s);
+const el = (t,c,x) => { const n=document.createElement(t); if(c)n.className=c; if(x!==undefined)n.textContent=x; return n; };
+let toastT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),1900); }
+function go(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  $('#v-'+name).classList.add('on');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.go===name));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  go(b.dataset.go); if(b.dataset.go==='log') renderLog(); if(b.dataset.go==='drills') renderDrills();
+});
+
+/* ===================== train screen ===================== */
+function renderTrain(){
+  const p = planFor(S.day);
+  $('#dayNum').innerHTML = S.day + '<small>of 21</small>';
+  $('#dayTheme').textContent = p.t;
+  $('#streakNum').textContent = S.streak;
+  $('#todayLabel').textContent = new Date().toLocaleDateString(undefined,{weekday:'short', day:'numeric', month:'short'});
+
+  const list = $('#planList'); list.innerHTML='';
+  let total = 0;
+  p.d.forEach((id,i)=>{
+    const d = byId(id); total += d.mins;
+    const row = el('div','step' + (doneToday()?' done':''));
+    row.appendChild(el('div','n', String(i+1)));
+    const t = el('div','t'); t.appendChild(el('b',null,d.name)); t.appendChild(el('span',null,d.tag+' · '+d.goal.split('.')[0]+'.'));
+    row.appendChild(t); row.appendChild(el('div','m', d.mins+' min'));
+    list.appendChild(row);
+  });
+  $('#planTitle').textContent = doneToday() ? 'Done today' : 'Today’s session · '+total+' min';
+  $('#startBtn').textContent = doneToday() ? 'Session complete' : 'Start session';
+  $('#startBtn').style.display = doneToday() ? 'none' : 'block';
+  $('#repeatBtn').style.display = doneToday() ? 'block' : 'none';
+}
+$('#startBtn').onclick = ()=> startSession(planFor(S.day).d);
+$('#repeatBtn').onclick = ()=> startSession(planFor(S.day).d);
+
+/* ===================== drill library ===================== */
+function renderDrills(){
+  const w = $('#drillList'); w.innerHTML='';
+  DRILLS.forEach(d=>{
+    const c = el('button','card');
+    c.appendChild(el('b',null,d.name));
+    c.appendChild(el('p',null,d.goal));
+    c.appendChild(el('div','meta', d.tag+' · about '+d.mins+' min'));
+    c.onclick = ()=>openDetail(d.id);
+    w.appendChild(c);
+  });
+}
+function openDetail(id){
+  const d = byId(id);
+  $('#dTitle').textContent = d.name;
+  $('#dGoal').textContent = d.goal;
+  const u = $('#dRules'); u.innerHTML='';
+  d.rules.forEach(r=>u.appendChild(el('li',null,r)));
+  $('#dStart').onclick = ()=> startSession([id], true);
+  go('detail');
+}
+$('#detailBack').onclick = ()=>{ renderDrills(); go('drills'); };
+
+/* ===================== runner ===================== */
+let Q=[], qi=0, timer=null, standalone=false;
+
+function startSession(ids, single){
+  standalone = !!single;
+  Q = ids.slice(); qi = 0;
+  $('#runner').classList.add('on');
+  runDrill();
+}
+function quitRun(){
+  clearInterval(timer); timer=null;
+  $('#runner').classList.remove('on');
+  $('#runBody').innerHTML=''; $('#runFoot').innerHTML='';
+}
+$('#quitRun').onclick = ()=>{ quitRun(); renderTrain(); go('train'); };
+
+function setTally(pct){ $('#tallyFill').style.width = Math.max(0,Math.min(100,pct))+'%'; }
+
+function runDrill(){
+  if (qi >= Q.length) return finishSession();
+  const d = byId(Q[qi]);
+  $('#runName').textContent = d.name;
+  $('#runCount').textContent = Q.length>1 ? (qi+1)+'/'+Q.length : d.tag;
+  setTally(0);
+  const body = $('#runBody'), foot = $('#runFoot');
+  body.innerHTML=''; foot.innerHTML='';
+  if (d.kind==='beats')  return runBeats(d, body, foot);
+  if (d.kind==='rounds') return runRounds(d, body, foot);
+  if (d.kind==='tap')    return runTap(d, body, foot);
+  if (d.kind==='read')   return runRead(d, body, foot);
+}
+function nextDrill(){ clearInterval(timer); timer=null; qi++; runDrill(); }
+
+function primaryBtn(foot, label, fn, quiet){
+  const b = el('button','cta'+(quiet?' quiet':''), label);
+  b.onclick = fn; foot.appendChild(b); return b;
+}
+const fmt = s => { const m=Math.floor(s/60), r=s%60; return m>0 ? m+':'+String(r).padStart(2,'0') : String(r); };
+
+/* shared scaffold: prompt / sub / clock / state, built once then updated */
+function scaffold(body, promptText, subText, clockText, stateText){
+  const s = el('div');
+  const p = el('div','prompt', promptText);
+  const sub = el('p','brief', subText);
+  const clock = el('div','clock', clockText);
+  const state = el('div','state', stateText);
+  s.append(p, sub, clock, state);
+  body.appendChild(s);
+  return {wrap:s, p, sub, clock, state,
+    live(on){ clock.classList.toggle('hot',on); state.classList.toggle('live',on);
+              state.textContent = on ? 'LIVE' : stateText; }};
+}
+
+/* --- beats --- */
+function runBeats(d, body, foot){
+  let rep = 0, current = d.prompt();
+  const total = d.beats.reduce((a,b)=>a+b.s,0);
+  const ui = scaffold(body, current, '', fmt(total), 'speak when it turns red');
+  const ul = el('ul','beats');
+  const rows = d.beats.map(b=>{
+    const li = el('li','beat');
+    li.append(el('b',null,b.l), el('span',null,b.h));
+    ul.appendChild(li); return li;
+  });
+  ui.wrap.appendChild(ul);
+  const setSub = ()=> ui.sub.textContent = 'Rep '+(rep+1)+' of '+d.reps+' · '+total+' seconds';
+  const mark = bi => rows.forEach((li,i)=>{
+    li.className = 'beat' + (bi===null ? '' : i===bi ? ' now' : i<bi ? ' past' : '');
+  });
+  setSub(); mark(null);
+
+  function start(){
+    let bi=0, t=d.beats[0].s, elapsed=0;
+    ui.live(true); ui.clock.textContent = fmt(t); mark(0); blip(false);
+    foot.innerHTML=''; primaryBtn(foot,'Cut',()=>{clearInterval(timer);done();},true);
+    timer = setInterval(()=>{
+      t--; elapsed++; setTally(elapsed/total*100);
+      if (t<=0){
+        bi++;
+        if (bi>=d.beats.length){ clearInterval(timer); return done(); }
+        t = d.beats[bi].s; blip(false); mark(bi);
+      }
+      ui.clock.textContent = fmt(t);
+    },1000);
+  }
+  function done(){
+    blip(true); rep++; ui.live(false); mark(null); setTally(0);
+    if (rep>=d.reps) return afterDrill(foot, body, 'Done — '+d.reps+' reps.');
+    current = d.prompt(); ui.p.textContent = current;
+    ui.clock.textContent = fmt(total); setSub();
+    foot.innerHTML=''; primaryBtn(foot,'Next rep', start);
+  }
+
+  primaryBtn(foot,'Start speaking', start);
+  const nb = el('button','ghost','New question'); nb.style.marginTop='10px';
+  nb.onclick = ()=>{ current = d.prompt(); ui.p.textContent = current; };
+  foot.appendChild(nb);
+}
+
+/* --- rounds --- */
+function runRounds(d, body, foot){
+  let r = 0, current = d.prompt();
+  const ui = scaffold(body, current, 'Round 1 of '+d.reps, fmt(d.sec), 'get the angle in your head first');
+  const box = el('div','tip'); box.style.marginTop='4px';
+  ui.wrap.appendChild(box);
+  const setAngle = ()=>{ box.innerHTML=''; box.append(el('b',null,'This round.'), document.createTextNode(' '+d.angles[r % d.angles.length])); };
+  setAngle();
+
+  function start(){
+    let t = d.sec; ui.live(true); ui.clock.textContent = fmt(t); blip(false);
+    foot.innerHTML=''; primaryBtn(foot,'Cut',()=>{clearInterval(timer);done();},true);
+    timer = setInterval(()=>{
+      t--; setTally((d.sec-t)/d.sec*100); ui.clock.textContent = fmt(Math.max(t,0));
+      if (t<=0){ clearInterval(timer); done(); }
+    },1000);
+  }
+  function done(){
+    blip(true); r++; setTally(0); ui.live(false);
+    if (r>=d.reps) return afterDrill(foot, body, 'All '+d.reps+' rounds done.');
+    ui.sub.textContent = 'Round '+(r+1)+' of '+d.reps;
+    ui.clock.textContent = fmt(d.sec); setAngle();
+    foot.innerHTML=''; primaryBtn(foot,'Next round', start);
+  }
+  primaryBtn(foot,'Start round 1', start);
+  const nb = el('button','ghost','New prompt'); nb.style.marginTop='10px';
+  nb.onclick = ()=>{ current = d.prompt(); ui.p.textContent = current; };
+  foot.appendChild(nb);
+}
+
+/* --- tap --- */
+function runTap(d, body, foot){
+  let count = 0, running = false, t = d.sec;
+  const ui = scaffold(body, d.prompt(), d.sec+' seconds · keep talking the whole time', fmt(t), 'ready');
+  const pad = el('button','tapzone');
+  const k = el('div','k','0'), h = el('div','h','pad wakes up when the clock starts');
+  pad.append(k,h); ui.wrap.appendChild(pad);
+  pad.onclick = ()=>{
+    if(!running) return;
+    count++; k.textContent = count;
+    if(navigator.vibrate){ try{ navigator.vibrate(12); }catch(e){} }
+  };
+
+  function start(){
+    running = true; ui.live(true); h.textContent = d.tapLabel; blip(false);
+    foot.innerHTML=''; primaryBtn(foot,'Cut',()=>{clearInterval(timer);done();},true);
+    timer = setInterval(()=>{
+      t--; setTally((d.sec-t)/d.sec*100); ui.clock.textContent = fmt(Math.max(t,0));
+      if (t<=0){ clearInterval(timer); done(); }
+    },1000);
+  }
+  function done(){
+    running=false; blip(true);
+    const per = count / ((d.sec - t)/60 || d.sec/60);
+    let verdict;
+    if (d.unit==='fillers') verdict = per<2 ? 'Broadcast clean.' : per<4 ? 'Solid — keep pushing the pauses.'
+      : per<7 ? 'Normal. This is the one to work on.' : 'Heavy. Run it again and let the silence sit.';
+    else verdict = count<8 ? 'Slow reach. Try again with a different category.' : count<15 ? 'Decent.' : 'Fast recall.';
+    pad.remove();
+    ui.live(false);
+    ui.p.textContent = count+' '+d.unit;
+    ui.sub.textContent = per.toFixed(1)+' per minute · '+verdict;
+    ui.clock.style.display='none'; ui.state.style.display='none';
+    afterDrill(foot, body, null);
+  }
+  primaryBtn(foot,'Start', start);
+}
+
+/* --- read (pace) --- */
+function runRead(d, body, foot){
+  let t=0;
+  const ui = scaffold(body,'Read this out loud', SCRIPT_WORDS+' words · your normal camera voice', '0', 'no rush — this is not a race');
+  ui.wrap.appendChild(el('div','script', SCRIPT));
+  function start(){
+    ui.live(true);
+    foot.innerHTML=''; primaryBtn(foot,'I’ve finished reading', stop);
+    timer = setInterval(()=>{ t++; setTally(Math.min(t/45*100,100)); ui.clock.textContent = fmt(t); },1000);
+  }
+  function stop(){
+    clearInterval(timer); blip(true); ui.live(false);
+    const wpm = t>0 ? Math.round(SCRIPT_WORDS / (t/60)) : 0;
+    const verdict = wpm>175 ? 'Too fast for camera. Read it again with a real breath at every full stop.'
+      : wpm>160 ? 'Slightly hot. Good for energy, harder for a viewer to hold.'
+      : wpm>=130 ? 'Right in the band. That is the speed to keep.'
+      : 'Slower than most talking head. Only a problem if it felt laboured.';
+    ui.wrap.querySelector('.script').remove();
+    ui.p.textContent = wpm+' words per minute';
+    ui.sub.textContent = 'Target band is 130–160. '+verdict;
+    ui.clock.style.display='none'; ui.state.style.display='none';
+    afterDrill(foot, body, null);
+  }
+  primaryBtn(foot,'Start reading', start);
+}
+
+/* --- shared drill end --- */
+function afterDrill(foot, body, msg){
+  setTally(100);
+  if (msg){ const p = el('p','brief', msg); p.style.marginTop='18px'; body.appendChild(p); }
+  foot.innerHTML='';
+  const last = qi >= Q.length-1;
+  primaryBtn(foot, last ? (standalone ? 'Finish' : 'Finish session') : 'Next drill', nextDrill);
+}
+
+/* ===================== finish + review ===================== */
+const QS = [
+  {k:'point', q:'Did you get to the point fast?', s:'First sentence, not the fourth.'},
+  {k:'frame', q:'Did you hold the structure?', s:'Or did it wander mid-answer.'},
+  {k:'clean', q:'How clean was it?', s:'5 means almost no fillers or stalls.'}
+];
+let answers = {};
+function finishSession(){
+  quitRun();
+  if (standalone){ toast('Drill done'); renderTrain(); go('train'); return; }
+  answers = {};
+  const w = $('#reviewQs'); w.innerHTML='';
+  QS.forEach(q=>{
+    const lab = el('div','qlab', q.q); lab.appendChild(el('i',null,q.s)); w.appendChild(lab);
+    const row = el('div','scale');
+    for(let i=1;i<=5;i++){
+      const b = el('button',null,String(i));
+      b.onclick = ()=>{ answers[q.k]=i; row.querySelectorAll('button').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); };
+      row.appendChild(b);
+    }
+    w.appendChild(row);
+  });
+  $('#reviewNote').value='';
+  go('review');
+}
+$('#saveReview').onclick = async ()=>{
+  const vals = QS.map(q=>answers[q.k]).filter(Boolean);
+  if (vals.length < QS.length) { toast('Tap a number for each one'); return; }
+  const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+  const p = planFor(S.day);
+  S.history.unshift({ date:today(), day:S.day, theme:p.t, drills:p.d, score:+avg.toFixed(1), note:$('#reviewNote').value.trim() });
+  if (S.history.length>120) S.history.length=120;
+  if (!doneToday()){
+    const diff = S.lastDone ? Math.round((new Date(today()) - new Date(S.lastDone))/86400000) : null;
+    S.streak = (diff===1) ? S.streak+1 : 1;
+    S.lastDone = today();
+    S.day = S.day + 1;
+  }
+  await save();
+  renderTrain(); go('train');
+  toast('Logged · '+S.streak+' day streak');
+};
+
+/* ===================== log ===================== */
+function renderLog(){
+  $('#logCount').textContent = S.history.length ? S.history.length+' sessions' : '';
+  const bars = $('#bars'); bars.innerHTML='';
+  const recent = S.history.slice(0,14).reverse();
+  if (!recent.length){ bars.style.display='none'; } else {
+    bars.style.display='flex';
+    recent.forEach(h=>{
+      const b = el('i'); b.style.height = (12 + (h.score/5)*54) + 'px';
+      b.style.background = h.score>=4 ? 'var(--good)' : h.score>=3 ? 'var(--warm)' : 'var(--live)';
+      b.title = h.date+' · '+h.score;
+      bars.appendChild(b);
+    });
+  }
+  const w = $('#logList'); w.innerHTML='';
+  if (!S.history.length){ w.appendChild(el('div','empty','No sessions yet. Your scores show up here.')); }
+  S.history.forEach(h=>{
+    const e = el('div','entry');
+    const s = el('div','s', String(h.score)); e.appendChild(s);
+    e.appendChild(el('div','d', new Date(h.date).toLocaleDateString(undefined,{day:'numeric',month:'short'}) + ' · day '+h.day+' · '+h.theme));
+    if (h.note) e.appendChild(el('div','w', h.note));
+    w.appendChild(e);
+  });
+  $('#soundState').textContent = S.sound ? 'On' : 'Off';
+}
+$('#soundToggle').onclick = async ()=>{ S.sound=!S.sound; await save(); renderLog(); blip(false); };
+$('#resetBtn').onclick = async ()=>{
+  if (!confirm('Clear your streak, day count and every logged session?')) return;
+  S = { day:1, streak:0, lastDone:null, history:[], sound:S.sound };
+  await save(); renderLog(); renderTrain(); toast('Reset');
+};
+
+/* ===================== boot ===================== */
+(async function(){
+  await load();
+  renderTrain(); renderDrills();
+})();
+</script>
+</body>
+</html>
