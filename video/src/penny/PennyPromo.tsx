@@ -5,8 +5,10 @@ import {
   Backdrop,
   CtaScene,
   LanguagesScene,
+  PhoneScene,
   PickupScene,
   RingScene,
+  StepsScene,
   SummaryScene,
 } from "./Scenes";
 import "./theme";
@@ -38,6 +40,20 @@ export const PennyPromo: React.FC = () => (
       />
       <TransitionSeries.Sequence name="Summary" durationInFrames={110}>
         <SummaryScene />
+      </TransitionSeries.Sequence>
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 12 })}
+      />
+      <TransitionSeries.Sequence name="Steps" durationInFrames={110}>
+        <StepsScene />
+      </TransitionSeries.Sequence>
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 12 })}
+      />
+      <TransitionSeries.Sequence name="Phone" durationInFrames={140}>
+        <PhoneScene />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition
         presentation={fade()}

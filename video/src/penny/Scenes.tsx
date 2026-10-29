@@ -1,8 +1,10 @@
 import {
   AbsoluteFill,
   Easing,
+  Img,
   Interactive,
   interpolate,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
@@ -306,6 +308,165 @@ export const SummaryScene: React.FC = () => (
     </Rise>
     <Rise delay={0.3}>
       <SummaryCard />
+    </Rise>
+  </Stack>
+);
+
+const steps = [
+  { n: "01", title: "Tell us about your business" },
+  { n: "02", title: "We set her up for you" },
+  { n: "03", title: "Read the summary.\nWin the customer." },
+];
+
+const Step: React.FC<{
+  readonly n: string;
+  readonly title: string;
+  readonly index: number;
+}> = ({ n, title, index }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const start = (0.5 + index * 0.4) * fps;
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 40,
+        width: 880,
+        opacity: interpolate(frame, [start, start + 0.4 * fps], [0, 1], clamp),
+        translate: interpolate(
+          frame,
+          [start, start + 0.6 * fps],
+          ["0px 50px", "0px 0px"],
+          { ...clamp, easing: ease },
+        ),
+      }}
+    >
+      <div
+        style={{
+          fontFamily: fonts.display,
+          fontWeight: 700,
+          fontSize: 110,
+          color: colors.accent,
+          width: 150,
+        }}
+      >
+        {n}
+      </div>
+      <div
+        style={{
+          fontFamily: fonts.body,
+          fontSize: 54,
+          color: colors.ink,
+          whiteSpace: "pre-line",
+        }}
+      >
+        {title}
+      </div>
+    </div>
+  );
+};
+
+export const StepsScene: React.FC = () => (
+  <Stack gap={60}>
+    <Rise delay={0} style={{ marginBottom: 30 }}>
+      <Interactive.Div name="Steps headline" style={{ ...headline, fontSize: 108 }}>
+        Set up once.
+        <br />
+        Answered every time.
+      </Interactive.Div>
+    </Rise>
+    {steps.map((s, i) => (
+      <Step key={s.n} n={s.n} title={s.title} index={i} />
+    ))}
+  </Stack>
+);
+
+// Point on the mockup photo where Penny's orb sits, as a fraction of its size.
+const ORB_X = 578 / 1122;
+const ORB_Y = 865 / 1402;
+
+const PhoneShot: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const width = 900;
+  const height = (width * 1402) / 1122;
+  return (
+    <div
+      style={{
+        width,
+        height,
+        borderRadius: 48,
+        overflow: "hidden",
+        boxShadow: `0 0 120px ${colors.accent}33, 0 40px 80px #00000099`,
+        scale: interpolate(frame, [0, 0.9 * fps], [0.92, 1], {
+          ...clamp,
+          easing: ease,
+          output: "perceptual-scale",
+        }),
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transformOrigin: `${ORB_X * 100}% ${ORB_Y * 100}%`,
+          scale: interpolate(frame, [0.6 * fps, 4 * fps], [1, 1.35], {
+            ...clamp,
+            easing: Easing.bezier(0.45, 0, 0.55, 1),
+            output: "perceptual-scale",
+          }),
+        }}
+      >
+        <Img
+          name="Phone mockup"
+          src={staticFile("penny/phone-mockup.jpg")}
+          style={{ width: "100%", height: "100%" }}
+        />
+        {[0, 1].map((i) => {
+          const t = ((frame / fps + i * 0.9) % 1.8) / 1.8;
+          return (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: `${ORB_X * 100}%`,
+                top: `${ORB_Y * 100}%`,
+                width: 150,
+                height: 150,
+                marginLeft: -75,
+                marginTop: -75,
+                borderRadius: "50%",
+                border: `4px solid ${colors.purple}`,
+                scale: interpolate(t, [0, 1], [1, 2.2]),
+                opacity:
+                  interpolate(t, [0, 0.15, 1], [0, 0.7, 0]) *
+                  interpolate(frame, [1.2 * fps, 1.6 * fps], [0, 1], clamp),
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export const PhoneScene: React.FC = () => (
+  <Stack gap={60}>
+    <Rise delay={0}>
+      <Interactive.Div name="Phone headline" style={{ ...headline, fontSize: 120 }}>
+        Go on. Say hello.
+      </Interactive.Div>
+    </Rise>
+    <Rise delay={0.15}>
+      <PhoneShot />
+    </Rise>
+    <Rise delay={0.5}>
+      <Interactive.Div name="Phone subline" style={body}>
+        Talk to her in your browser.
+        <br />
+        Nothing to install.
+      </Interactive.Div>
     </Rise>
   </Stack>
 );
